@@ -13,7 +13,7 @@ def load_single_house_safe(house_dir: Path, target_appliance: str = "kettle") ->
     if not agg_path.exists() or not app_path.exists():
         raise FileNotFoundError(f"⚠️ 数据缺失: 请确认 {agg_path} 与 {app_path} 存在")
 
-    # ✅ 已修复：强制 float64 + 抑制日期警告
+    
     df_agg = pd.read_csv(agg_path, names=["timestamp", "aggregate"], parse_dates=["timestamp"], index_col="timestamp", header=0, dtype={"aggregate": "float64"}, date_format="mixed")
     df_app = pd.read_csv(app_path, names=["timestamp", target_appliance], parse_dates=["timestamp"], index_col="timestamp", header=0, dtype={target_appliance: "float64"}, date_format="mixed")
 
