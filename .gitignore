@@ -1,0 +1,12 @@
+﻿# 数据与权重（公开数据集/训练产物自行管理）
+data/raw/*
+data/processed/*.npz
+data/processed/*.h5
+logs/checkpoints/*.pth
+logs/checkpoints/*.onnx
+# 缓存与临时文件
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db
