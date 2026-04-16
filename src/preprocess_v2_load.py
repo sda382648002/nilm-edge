@@ -7,26 +7,19 @@ from pathlib import Path
 from datetime import datetime
 
 def load_single_house_safe(house_dir: Path, target_appliance: str = "kettle") -> pd.DataFrame:
-    """
-    加载单House数据，仅允许历史填充，严格时间对齐
-    """
     agg_path = house_dir / "aggregate.csv"
     app_path = house_dir / f"appliance_{target_appliance}.csv"
 
     if not agg_path.exists() or not app_path.exists():
         raise FileNotFoundError(f"⚠️ 数据缺失: 请确认 {agg_path} 与 {app_path} 存在")
 
-    # 1. 读取并解析时间索引
-    df_agg = pd.read_csv(agg_path, names=["timestamp", "aggregate"], parse_dates=["timestamp"], index_col="timestamp")
-    df_app = pd.read_csv(app_path, names=["timestamp", target_appliance], parse_dates=["timestamp"], index_col="timestamp")
+    # ✅ 已修复：强制 float64 + 抑制日期警告
+    df_agg = pd.read_csv(agg_path, names=["timestamp", "aggregate"], parse_dates=["timestamp"], index_col="timestamp", header=0, dtype={"aggregate": "float64"}, date_format="mixed")
+    df_app = pd.read_csv(app_path, names=["timestamp", target_appliance], parse_dates=["timestamp"], index_col="timestamp", header=0, dtype={target_appliance: "float64"}, date_format="mixed")
 
-    # 2. 内部合并（仅同建筑列）
     df = pd.concat([df_agg, df_app], axis=1)
+    df = df.interpolate(method='linear', limit=10).ffill(limit=10)  # 学术红线：禁用bfill
 
-    # 3. 安全填充：短时线性插值 + 前向填充（学术红线：禁用bfill）
-    df = df.interpolate(method='linear', limit=10).ffill(limit=10)
-
-    # 4. 清洗验证
     assert not df.isnull().any().any(), "⚠️ 存在未填充NaN，检查数据源缺失比例"
     assert df.index.is_monotonic_increasing, "⚠️ 时间索引未排序，请检查原始数据"
 

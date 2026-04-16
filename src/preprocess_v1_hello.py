@@ -18,7 +18,7 @@ def main():
     print(f"PyTorch: {torch.__version__}")
     print("=" * 45)
 
-    # 自动追加日志（学术规范：每次运行必留痕）
+    
     log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
     log_file = log_dir / "experiment_log.txt"
