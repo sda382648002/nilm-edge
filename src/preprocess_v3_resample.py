@@ -10,7 +10,7 @@ def resample_to_1hz(df: pd.DataFrame) -> pd.DataFrame:
         
     df = df.sort_index()
     # 重采样至 1S，线性插值填补间隙（limit=60 防长间隙扭曲）
-    df_1hz = df.resample('1S').mean().interpolate(method='linear', limit=60)
+    df_1hz = df.resample('1s').mean().interpolate(method='linear', limit=60)
     df_1hz = df_1hz.ffill().bfill()  # 首尾安全填充
     return df_1hz
 

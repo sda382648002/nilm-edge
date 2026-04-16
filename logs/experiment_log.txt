@@ -4,3 +4,4 @@
 [2026-04-16 17:01:52] v2_load | Single-house loaded | Samples=100 | No bfill ✅
 [2026-04-16 17:28:54] v3_resample | 1Hz resampling validated | Samples=541 ✅
 [2026-04-16 17:39:03] Pipeline | v2->v3 chained | Samples: 100->5941 ✅
+[2026-04-16 17:41:26] Pipeline | v2->v3 chained | Samples: 100->5941 ✅
